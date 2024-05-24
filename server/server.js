@@ -7,7 +7,6 @@ exports = {
    fetchCustomerInfo: async function(args) {
     const { email } = args.context;
     const apiKey = args.iparams.apiKey;
-    const domainName = args.iparams.domainName;
     const requestBody = JSON.stringify({ customer: { email: email } });
     const signature = generateHmacSha1(requestBody, apiKey);
     try {
