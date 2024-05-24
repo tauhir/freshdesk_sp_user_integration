@@ -1,54 +1,58 @@
-var client;
-
-init();
-
-async function init() {
-    client = await app.initialized();
-    client.events.on('app.activated', renderCustomerInfo);
-}
-
-async function renderCustomerInfo() {
+document.onreadystatechange = function () {
+    if (document.readyState === "complete") {
+      app.initialized()
+        .then(function (client) {
+          client.events.on("app.activated", function () {
+            renderCustomerInfo(client);
+          });
+        })
+        .catch(handleErr);
+    }
+  };
+  
+  async function renderCustomerInfo(client) {
     const textElement = document.getElementById('apptext');
     const contactData = await client.data.get('contact');
-
+  
     if (contactData && contactData.contact && contactData.contact.email) {
-        console.log("Contact Data incoming:");
-        console.info(contactData);
-
-        const email = contactData.contact.email;
-        console.log("Email:", email);
-        const url = utils.get('domainName')
-        const requestBody = JSON.stringify({ customer: { email: email } });
-        const signature = generateSignature(requestBody, utils.get('apiKey'));
-        console.log("Generated Signature:", signature);
-
-        const response = await fetch(url + '/customer-info', {
-            method: 'POST', // Use POST to match typical signature verification patterns
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Freshdesk-Signature': signature
-            },
-            body: requestBody // Include the request body
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.info('Successfully got data from backend:');
-            console.info(data);
-
-            if (data.html) {
-                textElement.innerHTML = data.html;
-            } else {
-                textElement.innerText = "No HTML content available";
-            }
+  
+      const email = contactData.contact.email;
+  
+      try {
+        const options = {
+          context: {
+            email: email
+          }
+        };
+  
+        const data = await client.request.invoke("fetchCustomerInfo", options);
+  
+        console.log("Server method Request ID is: " + data.requestID);
+  
+        if (data.response) {
+          const responseData = JSON.parse(data.response.response);
+          console.info('Successfully got data from backend:');
+  
+          if (responseData.html) {
+            textElement.innerHTML = responseData.html;
+          } else {
+            textElement.innerText = "No HTML content available";
+          }
         } else {
-            textElement.innerText = "Failed to fetch customer info";
+          textElement.innerText = "Failed to fetch customer info";
         }
+      } catch (err) {
+        console.log("Request ID: " + err.requestID);
+        console.log("error status: " + err.status);
+        console.log("error message: " + err.message);
+        textElement.innerText = "Failed to fetch customer info";
+      }
     } else {
-        textElement.innerText = "No contact data available";
+      textElement.innerText = "No contact data available";
     }
-}
-
-function generateSignature(body, secret) {
-    return CryptoJS.HmacSHA256(body, secret).toString(CryptoJS.enc.Hex);
-}
+  }
+  
+  function handleErr(err) {
+    console.error("App failed to initialize", err);
+  }
+  

@@ -1,0 +1,15 @@
+{
+    "GetFreshdeskInfo": {
+      "schema": {
+        "method": "POST",
+        "host": "<%= iparam.domainName %>",
+        "path": "/freshdesk_info",
+        "headers": {
+          "Content-Type": "application/json",
+          "Accept": "*/*",
+          "User-Agent": "Freshdesk Client - Tauhir (https://simplepay-support.freshdesk.com/)",
+          "X-Freshdesk-Signature": "<%= context.signature %>"
+        }
+      }
+    }
+  }

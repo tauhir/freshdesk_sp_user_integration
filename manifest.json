@@ -7,11 +7,27 @@
           "url": "index.html",
           "icon": "styles/images/icon.svg"
         }
-      }
+      },
+      "events": {
+        "onTicketCreate": {
+          "handler": "onTicketCreateHandler"
+        }
+      },
+      "functions": {
+        "fetchCustomerInfo": {
+          "timeout": 20
+        }
+      },
+      "requests": {
+        "GetFreshdeskInfo": {}
+       }
     }
   },
   "engines": {
     "node": "18.19.1",
-    "fdk": "9.0.8"
+    "fdk": "9.0.9"
+  },
+  "dependencies": {
+    "crypto-js": "4.2.0"
   }
-}
+  }

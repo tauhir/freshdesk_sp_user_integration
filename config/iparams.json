@@ -1,21 +1,18 @@
 {
-    "domainName": {
-      "display_name": "Domain Name",
-      "description": "Please enter your domain name",
-      "type": "domain",
-      "type_attributes": {
-        "product": "freshdesk"
-      },
-      "required": true
-    },
-    "apiKey": {
-      "display_name": "API Key",
-      "description": "Please enter your api_key",
-      "type": "api_key",
-      "secure": true,
-      "required": true,
-      "type_attributes": {
-        "product": "freshdesk"
-      }
+  "domainName": {
+    "display_name": "Website Domain",
+    "description": "Please enter your SimplePay domain",
+    "type": "text",
+    "required": true
+  },
+  "apiKey": {
+    "display_name": "API Key",
+    "description": "Please enter your api_key",
+    "type": "api_key",
+    "required": true,
+    "secure": true,
+    "type_attributes": {
+      "product": "freshdesk"
     }
+  }
   }
